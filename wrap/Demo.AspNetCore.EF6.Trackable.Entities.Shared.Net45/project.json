@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "net451": {
+      "wrappedProject": "../../src/Demo.AspNetCore.EF6.Trackable.Entities.Shared.Net45/Demo.AspNetCore.EF6.Trackable.Entities.Shared.Net45.csproj",
+      "bin": {
+        "assembly": "../../src/Demo.AspNetCore.EF6.Trackable.Entities.Shared.Net45/obj/{configuration}/Demo.AspNetCore.EF6.Trackable.Entities.Shared.Net45.dll",
+        "pdb": "../../src/Demo.AspNetCore.EF6.Trackable.Entities.Shared.Net45/obj/{configuration}/Demo.AspNetCore.EF6.Trackable.Entities.Shared.Net45.pdb"
+      },
+      "dependencies": {
+        "Newtonsoft.Json": "6.0.8",
+        "TrackableEntities.Client": "2.5.2",
+        "TrackableEntities.CodeTemplates.Shared.Net45": "2.5.0",
+        "TrackableEntities.Common": "2.5.2.1"
+      }
+    }
+  }
+}

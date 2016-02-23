@@ -162,13 +162,12 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
     - Press **Ctrl+F5** to start the .WebApi project.
     - You can also execute `dnx web` from a command line.
     - Use Postman or Fiddler.
-    - Set Content-Type header to application/json.
     - The database should be created automatically
     
     ```
-    GET: http://localhost:56274/api/products
-    GET: http://localhost:56274/api/customers
-    GET: http://localhost:56274/api/customers/ALFKI
+    GET: http://localhost:5000/api/products
+    GET: http://localhost:5000/api/customers
+    GET: http://localhost:5000/api/customers/ALFKI
     ```
 
 8. Add an Orders controller with actions for GET, POST, PATCH and DELETE
@@ -186,13 +185,13 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
             _dbContext = dbContext;
         }
 
-        // GET api/orders/ABCD
+        // GET api/orders?customerId=ABCD
         [HttpGet("{customerId}")]
         public async Task<ObjectResult> GetOrders(string customerId)
         {
             IEnumerable<Order> orders = await _dbContext.Orders
                 .Include(o => o.Customer)
-                .Include("OrderDetails.Product") // Include details with products
+                .Include("OrderDetails.Product")
                 .Where(o => o.CustomerId == customerId)
                 .ToListAsync();
 
@@ -200,12 +199,12 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
         }
 
         // GET api/orders/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ObjectResult> GetOrders(int id)
         {
             Order order = await _dbContext.Orders
                 .Include(o => o.Customer)
-                .Include("OrderDetails.Product") // Include details with products
+                .Include("OrderDetails.Product")
                 .SingleOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
@@ -218,7 +217,7 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
 
         // POST api/Order
         [HttpPost]
-        public async Task<ObjectResult> PostOrder(Order order)
+        public async Task<ObjectResult> PostOrder([FromBody]Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -232,12 +231,12 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
 
             await _dbContext.LoadRelatedEntitiesAsync(order);
             order.AcceptChanges();
-            return CreatedAtRoute("DefaultApi", new { id = order.OrderId }, order);
+            return CreatedAtRoute(new { id = order.OrderId }, order);
         }
 
         // PUT api/Order
         [HttpPut]
-        public async Task<ObjectResult> PutOrder(Order order)
+        public async Task<ObjectResult> PutOrder([FromBody]Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -269,7 +268,7 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
         public async Task<ActionResult> DeleteOrder(int id)
         {
             Order order = await _dbContext.Orders
-                .Include(o => o.OrderDetails) // Include details
+                .Include(o => o.OrderDetails)
                 .SingleOrDefaultAsync(o => o.OrderId == id);
             if (order == null)
             {
@@ -304,4 +303,25 @@ called **NorthwindSlim**, then run the SQL script in* http://bit.ly/northwindsli
         + TrackableEntities.Common
         + TrackableEntities.Client
     - Add a reference to the .Entities project.
-        
+
+10. Add an INorthwindServiceAgent interface.
+
+    ```csharp
+    public interface INorthwindServiceAgent
+    {
+        Task<Order> CreateOrder(Order order);
+        Task DeleteOrder(Order order);
+        Task<IList<Order>> GetCustomerOrders(string customerId);
+        Task<IList<Customer>> GetCustomers();
+        Task<Order> GetOrder(int orderId);
+        Task<Order> UpdateOrder(Order order);
+        Task<bool> VerifyOrderDeleted(int orderId);
+    }
+    ```
+
+11. Implement INorthwindServiceAgent, passing a base address and 
+    MediaTypeFormatter to the ctor.
+    - Initialize an HttpClient using the base address
+    - Submit HTTP requests to the server
+    - Specify the media type formatter with POST and PUT requests
+

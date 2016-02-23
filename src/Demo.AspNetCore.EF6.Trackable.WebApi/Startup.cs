@@ -3,14 +3,10 @@ using System.IO;
 using Demo.AspNetCore.EF6.Trackable.Data.Contexts;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.AspNet.Mvc;
-using Newtonsoft.Json;
-using System.Linq;
 
 namespace Demo.AspNetCore.EF6.Trackable.WebApi
 {
@@ -41,14 +37,7 @@ namespace Demo.AspNetCore.EF6.Trackable.WebApi
             });
 
             // Add framework services
-            services.AddMvc(options =>
-            {
-                // Preserve reference handling
-                //foreach (var jsonOutput in options.OutputFormatters.OfType<JsonOutputFormatter>())
-                //    jsonOutput.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All;
-                //foreach (var jsonInput in options.InputFormatters.OfType<JsonInputFormatter>())
-                //    jsonInput.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All;
-            });
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

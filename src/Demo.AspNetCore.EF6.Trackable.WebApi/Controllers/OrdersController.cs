@@ -28,7 +28,7 @@ namespace Demo.AspNetCore.EF6.Trackable.WebApi.Controllers
         {
             IEnumerable<Order> orders = await _dbContext.Orders
                 .Include(o => o.Customer)
-                .Include("OrderDetails.Product") // Include details with products
+                .Include("OrderDetails.Product")
                 .Where(o => o.CustomerId == customerId)
                 .ToListAsync();
 
@@ -41,7 +41,7 @@ namespace Demo.AspNetCore.EF6.Trackable.WebApi.Controllers
         {
             Order order = await _dbContext.Orders
                 .Include(o => o.Customer)
-                .Include("OrderDetails.Product") // Include details with products
+                .Include("OrderDetails.Product")
                 .SingleOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
@@ -54,7 +54,7 @@ namespace Demo.AspNetCore.EF6.Trackable.WebApi.Controllers
 
         // POST api/Order
         [HttpPost]
-        public async Task<ObjectResult> PostOrder(Order order)
+        public async Task<ObjectResult> PostOrder([FromBody]Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace Demo.AspNetCore.EF6.Trackable.WebApi.Controllers
 
         // PUT api/Order
         [HttpPut]
-        public async Task<ObjectResult> PutOrder(Order order)
+        public async Task<ObjectResult> PutOrder([FromBody]Order order)
         {
             if (!ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace Demo.AspNetCore.EF6.Trackable.WebApi.Controllers
         public async Task<ActionResult> DeleteOrder(int id)
         {
             Order order = await _dbContext.Orders
-                .Include(o => o.OrderDetails) // Include details
+                .Include(o => o.OrderDetails)
                 .SingleOrDefaultAsync(o => o.OrderId == id);
             if (order == null)
             {

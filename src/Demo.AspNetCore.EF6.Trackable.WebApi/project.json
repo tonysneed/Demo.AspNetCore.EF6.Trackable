@@ -32,7 +32,7 @@
       "frameworkAssemblies": {
         "System.Data": "4.0.0.0"
       }
-    },
+    }
   },
 
   "exclude": [
